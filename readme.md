@@ -1,0 +1,1 @@
+This is boilerplate code for small python scripts that are supposed to be run in the console/background
