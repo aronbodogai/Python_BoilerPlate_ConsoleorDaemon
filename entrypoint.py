@@ -4,6 +4,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import trange
 from tqdm.contrib.logging import logging_redirect_tqdm
+from tqdm import tqdm
 
 
 import pandas as pd
@@ -83,14 +84,15 @@ def SingleThreadedOperation(func,iterable):
 
 def MultiThreadedOperation(func,iterable,max_workers): #finish bulding this from here:https://rednafi.com/python/tqdm_progressbar_with_concurrent_futures/
     resultArray=[]
-    with logging_redirect_tqdm() :
+    with tqdm(total=len(iterable)) as pbar :
         with ThreadPoolExecutor(max_workers=max_workers) as e:
             futures = [
                 e.submit(func, i) for i in iterable
             ]
             for future in as_completed(futures):
                 result = future.result()
-                
+                pbar.update(1)
+
                 logging.info(f"TestLogWhile {result}")  
                 resultArray.append(result)
                 
