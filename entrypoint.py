@@ -6,11 +6,13 @@ from tqdm import trange
 from tqdm.contrib.logging import logging_redirect_tqdm
 from tqdm import tqdm
 
-
 import pandas as pd
 from pandas import json_normalize
 
-from time import sleep
+
+from environs import Env
+
+from myutils import *
 
 # Define logging levels
 LOG_LEVELS = {
@@ -82,7 +84,7 @@ def SingleThreadedOperation(func,iterable):
     logging.info("Sequential Iteration Successful")
     return resultArray
 
-def MultiThreadedOperation(func,iterable,max_workers): #finish bulding this from here:https://rednafi.com/python/tqdm_progressbar_with_concurrent_futures/
+def MultiThreadedOperation(func,iterable,max_workers): 
     resultArray=[]
     with tqdm(total=len(iterable)) as pbar :
         with ThreadPoolExecutor(max_workers=max_workers) as e:
@@ -100,9 +102,7 @@ def MultiThreadedOperation(func,iterable,max_workers): #finish bulding this from
     logging.info("Concurrent Iteration Successful")
     return resultArray
 
-def arbitraryTestFunc(x):
-    sleep(.1)
-    return (x % 5 ==0)
+
 
 if __name__ == '__main__':
     setup_logging()
@@ -110,6 +110,10 @@ if __name__ == '__main__':
     parser.add_argument("-o", action="store", help="Output format like asd.xlsx or asd.json" )
     args = parser.parse_args()
 
+    env = Env()
+    # Read .env into os.environ
+    env.read_env()
+    print (env.str("NOTSOSECRETKEY"), env.int("PORT"))  
 
     logging.info("Application start with args {}".format(args))
 
