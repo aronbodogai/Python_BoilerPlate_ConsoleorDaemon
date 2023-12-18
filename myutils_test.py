@@ -3,9 +3,11 @@ import myutils
 def test_testfunction():
     assert myutils.arbitraryTestFunc(5) == True 
     assert myutils.arbitraryTestFunc(1) == False 
-def testIPv4():
+def testIPwithIP():
     assert myutils.isIP('1.1.1.1') == True
     assert myutils.isIP('2001:db8::') == True
+    assert myutils.isIP('255.255.255.255') == True
+    assert myutils.isIP('255.255.255.256') == False
 def test_answerstring():
     assert myutils.isIP('asd') == False
 def test_answerint():
