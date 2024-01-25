@@ -84,23 +84,23 @@ def SingleThreadedOperation(func,iterable):
     logging.info("Sequential Iteration Successful")
     return resultArray
 
-def MultiThreadedOperation(func,iterable,max_workers): 
-    resultArray=[]
-    with tqdm(total=len(iterable)) as pbar :
-        with ThreadPoolExecutor(max_workers=max_workers) as e:
-            futures = [
-                e.submit(func, i) for i in iterable
-            ]
+def MultiThreadedOperation(func, iterable, max_workers):
+    resultArray = []
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Setup tasks
+        futures = {executor.submit(func, item): item for item in iterable}
+        
+        # Initialize tqdm as a context manager
+        with tqdm(total=len(iterable)) as progress_bar:
             for future in as_completed(futures):
                 result = future.result()
-                pbar.update(1)
-
-                logging.info(f"TestLogWhile {result}")  
+                progress_bar.update(1)
+                logging.info(f"Result: {result}")
                 resultArray.append(result)
-                
-                  
+
     logging.info("Concurrent Iteration Successful")
     return resultArray
+
 
 
 
