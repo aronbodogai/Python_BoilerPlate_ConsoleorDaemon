@@ -113,7 +113,15 @@ if __name__ == '__main__':
     env = Env()
     # Read .env into os.environ
     env.read_env()
-    print (env.str("NOTSOSECRETKEY"), env.int("PORT"))  
+    try:
+        key = env.str("NOTSOSECRETKEY")
+        port = env.int("PORT")
+    except Exception as e:
+        logging.error(f"Error reading environment variables: {e}")
+        exit(1)
+    logging.info(f"Key loaded: {'*' * (len(key) - 3) + key[-3:]}")  # Prints masked key for confirmation
+    logging.info(f"Port: {env.int('PORT')}")
+
 
     logging.info("Application start with args {}".format(args))
 
